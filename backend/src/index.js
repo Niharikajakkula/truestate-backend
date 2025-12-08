@@ -11,7 +11,31 @@ const PORT = process.env.PORT || 5002;
 
 // Middleware
 app.use(compression({ level: 6, threshold: 1024 })); // Faster compression
-app.use(cors({ maxAge: 86400 })); // Cache CORS preflight for 24h
+
+// CORS configuration - allow your Vercel frontend
+const allowedOrigins = [
+  'http://localhost:5173', // Local dev
+  'http://localhost:5174', // Alternative local port
+  'https://truestate-backend-dw9mg9np9-sri-niharikas-projects.vercel.app', // Your Vercel deployment
+  'https://truestate-backend-sri-niharikas-projects.vercel.app', // Vercel production domain (if different)
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('Blocked by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  maxAge: 86400 // Cache CORS preflight for 24h
+}));
+
 app.use(express.json({ limit: '1mb' }));
 
 // Routes
