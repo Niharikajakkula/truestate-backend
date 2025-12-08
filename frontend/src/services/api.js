@@ -7,9 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://truestate-backend-
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000, // Increased timeout for Render cold starts
-  headers: {
-    'Accept-Encoding': 'gzip, deflate'
-  }
+  withCredentials: true // Enable credentials for CORS
 })
 
 // Sales APIs

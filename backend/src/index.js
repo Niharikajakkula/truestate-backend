@@ -23,9 +23,7 @@ const allowedOrigins = [
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.log('Blocked by CORS:', origin);
@@ -35,7 +33,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-  maxAge: 86400 // Cache CORS preflight for 24h
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 
 app.use(express.json({ limit: '1mb' }));
