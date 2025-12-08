@@ -33,3 +33,15 @@ The CSV file should contain the following columns:
 Download the dataset from: https://drive.google.com/file/d/1tzbyuxBmrBwMSXbL22r33FUMtO0V_lxb/view?usp=sharing
 
 Save it as `sales_data.csv` in this directory.
+
+## Verification
+To verify the CSV file is present and readable, run:
+```bash
+cd backend
+npm run verify
+```
+
+## Important for Deployment
+- This file MUST be committed to git for deployment to work
+- File size: ~50MB
+- Ensure `.gitignore` does NOT exclude `*.csv` files in this directory

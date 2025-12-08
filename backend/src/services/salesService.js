@@ -115,29 +115,69 @@ class SalesService {
         }
       }
 
-      // Product Category filter
-      if (categorySet && !categorySet.has(item['Product Category'])) {
-        continue;
+      // Product Category filter - case insensitive comparison
+      if (categorySet) {
+        const itemCategory = item['Product Category'] ? item['Product Category'].trim() : '';
+        let found = false;
+        for (const filterCategory of categorySet) {
+          if (itemCategory.toLowerCase() === filterCategory.toLowerCase()) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) continue;
       }
 
-      // Tags filter
-      if (tagsSet && !tagsSet.has(item['Tags'])) {
-        continue;
+      // Tags filter - case insensitive comparison
+      if (tagsSet) {
+        const itemTags = item['Tags'] ? item['Tags'].trim() : '';
+        let found = false;
+        for (const filterTag of tagsSet) {
+          if (itemTags.toLowerCase() === filterTag.toLowerCase()) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) continue;
       }
 
-      // Payment Method filter
-      if (paymentSet && !paymentSet.has(item['Payment Method'])) {
-        continue;
+      // Payment Method filter - case insensitive comparison
+      if (paymentSet) {
+        const itemPayment = item['Payment Method'] ? item['Payment Method'].trim() : '';
+        let found = false;
+        for (const filterPayment of paymentSet) {
+          if (itemPayment.toLowerCase() === filterPayment.toLowerCase()) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) continue;
       }
 
-      // Order Status filter
-      if (orderStatusSet && !orderStatusSet.has(item['Order Status'])) {
-        continue;
+      // Order Status filter - case insensitive comparison
+      if (orderStatusSet) {
+        const itemStatus = item['Order Status'] ? item['Order Status'].trim() : '';
+        let found = false;
+        for (const filterStatus of orderStatusSet) {
+          if (itemStatus.toLowerCase() === filterStatus.toLowerCase()) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) continue;
       }
 
-      // Store Location filter
-      if (locationSet && !locationSet.has(item['Store Location'])) {
-        continue;
+      // Store Location filter - case insensitive comparison
+      if (locationSet) {
+        const itemLocation = item['Store Location'] ? item['Store Location'].trim() : '';
+        let found = false;
+        for (const filterLocation of locationSet) {
+          if (itemLocation.toLowerCase() === filterLocation.toLowerCase()) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) continue;
       }
 
       // Date Range filter (by year)

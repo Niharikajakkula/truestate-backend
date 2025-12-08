@@ -32,8 +32,9 @@ yarn-error.log*
 Thumbs.db
 
 # Data files
-backend/data/*.csv
-!backend/data/README.md
+# NOTE: sales_data.csv is REQUIRED for deployment - do NOT ignore it!
+# backend/data/*.csv (commented out to include sales_data.csv)
+!backend/data/sales_data.csv
 
 # Temporary files
 *.tmp

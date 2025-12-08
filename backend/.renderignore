@@ -1,0 +1,8 @@
+# Files to ignore during Render deployment
+node_modules/
+.env
+*.log
+.DS_Store
+
+# DO NOT ignore data directory - we need the CSV file!
+# data/
