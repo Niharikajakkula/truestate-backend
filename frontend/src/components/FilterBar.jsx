@@ -150,8 +150,10 @@ function FilterBar({ options, filters, onChange }) {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {options.customerRegions?.map(region => (
-              <label key={region} className="filter-option">
+              <label key={region} htmlFor={`region-${region}`} className="filter-option">
                 <input
+                  id={`region-${region}`}
+                  name="customerRegion"
                   type="checkbox"
                   checked={filters.customerRegion?.includes(region) || false}
                   onChange={() => handleMultiSelect('customerRegion', region)}
@@ -180,8 +182,9 @@ function FilterBar({ options, filters, onChange }) {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {options.genders?.map(gender => (
-              <label key={gender} className="filter-option">
+              <label key={gender} htmlFor={`gender-${gender}`} className="filter-option">
                 <input
+                  id={`gender-${gender}`}
                   type="radio"
                   name="gender"
                   checked={filters.gender?.includes(gender) || false}
@@ -211,8 +214,9 @@ function FilterBar({ options, filters, onChange }) {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {['below18', '18-25', '26-35', '36-45', '46-60', '60+'].map(range => (
-              <label key={range} className="filter-option">
+              <label key={range} htmlFor={`age-${range}`} className="filter-option">
                 <input
+                  id={`age-${range}`}
                   type="radio"
                   name="ageRange"
                   checked={filters.ageRange === range}
@@ -242,8 +246,10 @@ function FilterBar({ options, filters, onChange }) {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {options.productCategories?.map(category => (
-              <label key={category} className="filter-option">
+              <label key={category} htmlFor={`category-${category}`} className="filter-option">
                 <input
+                  id={`category-${category}`}
+                  name="productCategory"
                   type="checkbox"
                   checked={filters.productCategory?.includes(category) || false}
                   onChange={() => handleMultiSelect('productCategory', category)}
@@ -272,8 +278,10 @@ function FilterBar({ options, filters, onChange }) {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {options.paymentMethods?.map(method => (
-              <label key={method} className="filter-option">
+              <label key={method} htmlFor={`payment-${method}`} className="filter-option">
                 <input
+                  id={`payment-${method}`}
+                  name="paymentMethod"
                   type="checkbox"
                   checked={filters.paymentMethod?.includes(method) || false}
                   onChange={() => handleMultiSelect('paymentMethod', method)}
@@ -302,8 +310,9 @@ function FilterBar({ options, filters, onChange }) {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {['2020', '2021', '2022', '2023'].map(year => (
-              <label key={year} className="filter-option">
+              <label key={year} htmlFor={`date-${year}`} className="filter-option">
                 <input
+                  id={`date-${year}`}
                   type="radio"
                   name="dateRange"
                   checked={filters.dateRange === year}
@@ -333,8 +342,10 @@ function FilterBar({ options, filters, onChange }) {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {options.storeLocations?.map(location => (
-              <label key={location} className="filter-option">
+              <label key={location} htmlFor={`location-${location}`} className="filter-option">
                 <input
+                  id={`location-${location}`}
+                  name="storeLocation"
                   type="checkbox"
                   checked={filters.storeLocation?.includes(location) || false}
                   onChange={() => handleMultiSelect('storeLocation', location)}
