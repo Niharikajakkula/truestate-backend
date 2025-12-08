@@ -52,6 +52,33 @@ app.get('/', (req, res) => {
 
 app.use('/api/sales', salesRoutes);
 
+// Global error handler - must be after all routes
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  
+  // CORS error
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({ 
+      error: 'CORS policy violation',
+      message: 'Origin not allowed'
+    });
+  }
+  
+  // Default error
+  res.status(err.status || 500).json({ 
+    error: err.message || 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
+});
+
+// 404 handler - must be after all routes
+app.use((req, res) => {
+  res.status(404).json({ 
+    error: 'Not found',
+    message: `Route ${req.method} ${req.path} not found`
+  });
+});
+
 // Initialize data and start server
 const initializeServer = async () => {
   try {
