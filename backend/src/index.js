@@ -36,11 +36,14 @@ const initializeServer = async () => {
     console.log('Environment:', process.env.NODE_ENV || 'development');
     console.log('Port:', PORT);
     
-    // Load CSV data using relative path from backend root
-    const csvRelativePath = 'data/sales_data.csv';
+    // Load CSV data (automatically detects chunked or single file)
+    console.log('Node version:', process.version);
+    console.log('Memory limit:', `${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2)} MB`);
     console.log('\n=== Loading CSV Data ===');
     
-    const data = await loadCSVData(csvRelativePath);
+    const startTime = Date.now();
+    const data = await loadCSVData();
+    const loadTime = ((Date.now() - startTime) / 1000).toFixed(2);
     
     // Validate data
     if (!data || data.length === 0) {
@@ -48,7 +51,8 @@ const initializeServer = async () => {
     }
     
     setSalesData(data);
-    console.log(`✓ Successfully loaded ${data.length} sales records`);
+    console.log(`\n✓ Data loaded in ${loadTime}s`);
+    console.log(`✓ Total records in memory: ${data.length.toLocaleString()}`);
     
     // Start server only after data is loaded
     console.log('\n=== Starting Server ===');
@@ -75,6 +79,7 @@ const initializeServer = async () => {
       console.log(`✓ Server running on port ${PORT}`);
       console.log(`✓ API endpoint: http://localhost:${PORT}/api/sales`);
       console.log(`✓ Health check: http://localhost:${PORT}/`);
+      console.log(`✓ Memory usage: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`);
       console.log('\n=== Server Ready ===');
     });
   } catch (error) {

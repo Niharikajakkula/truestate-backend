@@ -6,6 +6,7 @@
     "start": "node --max-old-space-size=4096 src/index.js",
     "dev": "nodemon --max-old-space-size=4096 src/index.js",
     "verify": "node verify-csv.js",
+    "split-csv": "node split-csv.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
