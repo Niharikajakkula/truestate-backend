@@ -16,8 +16,7 @@ app.use(compression({ level: 6, threshold: 1024 })); // Faster compression
 const allowedOrigins = [
   'http://localhost:5173', // Local dev
   'http://localhost:5174', // Alternative local port
-  'https://truestate-backend-dw9mg9np9-sri-niharikas-projects.vercel.app', // Your Vercel deployment
-  'https://truestate-backend-sri-niharikas-projects.vercel.app', // Vercel production domain (if different)
+  'https://truestate-backend-five.vercel.app', // Your Vercel deployment
 ];
 
 app.use(cors({
