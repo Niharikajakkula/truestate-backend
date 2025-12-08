@@ -1,11 +1,10 @@
-const salesService = require('../services/salesService');
+const streamingLoader = require('../utils/streamingDataLoader');
 
 class SalesController {
   // Get sales data with search, filter, sort, pagination
-  getSales(req, res) {
+  async getSales(req, res) {
     try {
-      const params = {
-        search: req.query.search,
+      const filters = {
         customerRegion: req.query.customerRegion ? req.query.customerRegion.split(',') : undefined,
         gender: req.query.gender ? req.query.gender.split(',') : undefined,
         ageRange: req.query.ageRange,
@@ -15,13 +14,15 @@ class SalesController {
         orderStatus: req.query.orderStatus ? req.query.orderStatus.split(',') : undefined,
         storeLocation: req.query.storeLocation ? req.query.storeLocation.split(',') : undefined,
         dateRange: req.query.dateRange,
-        sortBy: req.query.sortBy,
-        sortOrder: req.query.sortOrder || 'asc',
-        page: req.query.page,
-        pageSize: req.query.pageSize,
       };
 
-      const result = salesService.query(params);
+      const search = req.query.search || '';
+      const sortBy = req.query.sortBy || 'date';
+      const sortOrder = req.query.sortOrder || 'desc';
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = parseInt(req.query.pageSize) || 10;
+
+      const result = await streamingLoader.queryData(filters, search, sortBy, sortOrder, page, pageSize);
       res.json(result);
     } catch (error) {
       console.error('Error in getSales:', error);
@@ -30,9 +31,9 @@ class SalesController {
   }
 
   // Get filter options
-  getFilterOptions(req, res) {
+  async getFilterOptions(req, res) {
     try {
-      const options = salesService.getFilterOptions();
+      const options = await streamingLoader.getFilterOptions();
       res.json(options);
     } catch (error) {
       console.error('Error in getFilterOptions:', error);

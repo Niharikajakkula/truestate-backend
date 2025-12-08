@@ -1,9 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
-const path = require('path');
-const { loadCSVData } = require('./utils/dataLoader');
-const { setSalesData } = require('./models/salesData');
+const streamingLoader = require('./utils/streamingDataLoader');
 const salesRoutes = require('./routes/salesRoutes');
 
 console.log('Starting server...');
@@ -35,27 +33,18 @@ const initializeServer = async () => {
     console.log('=== Server Initialization ===');
     console.log('Environment:', process.env.NODE_ENV || 'development');
     console.log('Port:', PORT);
-    
-    // Load CSV data (automatically detects chunked or single file)
     console.log('Node version:', process.version);
     console.log('Memory limit:', `${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2)} MB`);
-    console.log('\n=== Loading CSV Data ===');
+    console.log('');
     
-    const startTime = Date.now();
-    const data = await loadCSVData();
-    const loadTime = ((Date.now() - startTime) / 1000).toFixed(2);
+    // Initialize streaming loader (no data loaded into memory)
+    streamingLoader.initialize();
+    console.log('✓ Streaming loader ready - data will be loaded on-demand');
+    console.log('✓ Memory usage: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB');
+    console.log('');
     
-    // Validate data
-    if (!data || data.length === 0) {
-      throw new Error('No data loaded from CSV file');
-    }
-    
-    setSalesData(data);
-    console.log(`\n✓ Data loaded in ${loadTime}s`);
-    console.log(`✓ Total records in memory: ${data.length.toLocaleString()}`);
-    
-    // Start server only after data is loaded
-    console.log('\n=== Starting Server ===');
+    // Start server
+    console.log('=== Starting Server ===');
     
     const server = app.listen(PORT);
     
@@ -64,9 +53,6 @@ const initializeServer = async () => {
       if (err.code === 'EADDRINUSE') {
         console.error(`\n❌ Port ${PORT} is already in use`);
         console.error('Please stop the other process or use a different port');
-        console.error('\nTo find and kill the process:');
-        console.error('Windows: netstat -ano | findstr :5002');
-        console.error('Then: taskkill /PID <PID> /F');
       } else {
         console.error('❌ Server error:', err.message);
       }
@@ -80,16 +66,21 @@ const initializeServer = async () => {
       console.log(`✓ API endpoint: http://localhost:${PORT}/api/sales`);
       console.log(`✓ Health check: http://localhost:${PORT}/`);
       console.log(`✓ Memory usage: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`);
-      console.log('\n=== Server Ready ===');
+      console.log('');
+      console.log('=== Server Ready ===');
+      console.log('💡 Data is loaded on-demand per request (memory efficient)');
     });
   } catch (error) {
-    console.error('\n=== Server Initialization Failed ===');
+    console.error('');
+    console.error('=== Server Initialization Failed ===');
     console.error('❌ Error:', error.message);
-    console.error('\nPossible causes:');
-    console.error('1. CSV file not found in backend/data/sales_data.csv');
-    console.error('2. CSV file is corrupted or has invalid format');
-    console.error('3. Insufficient permissions to read the file');
-    console.error('\nPlease fix the issue and restart the server.');
+    console.error('');
+    console.error('Possible causes:');
+    console.error('1. CSV files not found in backend/data/');
+    console.error('2. CSV files are corrupted or have invalid format');
+    console.error('3. Insufficient permissions to read files');
+    console.error('');
+    console.error('Please fix the issue and restart the server.');
     process.exit(1);
   }
 };

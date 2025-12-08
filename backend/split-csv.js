@@ -52,7 +52,7 @@ async function splitCSV() {
     }
 
     // Progress indicator
-    if (totalRows % 100000 === 0) {
+    if (totalRows % 50000 === 0) {
       process.stdout.write(`\rProcessed: ${totalRows.toLocaleString()} rows...`);
     }
   }
