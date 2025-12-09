@@ -1,8 +1,15 @@
 # Node / build
 node_modules/
-.env
 dist/
 build/
+
+# Environment variables
+.env
+.env.local
+frontend/.env.local
+
+# Editor configs
+.vscode/
 
 # Data files
 backend/data/*.csv
