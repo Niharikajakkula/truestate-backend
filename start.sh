@@ -9,4 +9,4 @@ npm install
 
 # Start the application
 echo "🎯 Starting application..."
-node index.js
+npm run start
