@@ -69,11 +69,13 @@ function App() {
   useEffect(() => {
     const loadFilterOptions = async () => {
       try {
+        console.log('Starting to load filter options...')
         const options = await fetchFilterOptions()
-        console.log('Filter options loaded:', options)
+        console.log('Filter options loaded successfully:', options)
         setFilterOptions(options)
       } catch (error) {
         console.error('Failed to load filter options:', error)
+        console.error('Error details:', error.response?.data || error.message)
       }
     }
     loadFilterOptions()

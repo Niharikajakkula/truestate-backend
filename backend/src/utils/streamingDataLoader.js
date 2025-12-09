@@ -133,17 +133,24 @@ class StreamingDataLoader {
       if (!match) return false;
     }
 
-    // Age Range
-    if (filters.ageRange) {
+    // Age Range - now supports multiple selections
+    if (filters.ageRange && filters.ageRange.length > 0) {
       const age = parseInt(row['Age']);
-      switch(filters.ageRange) {
-        case 'below18': if (age >= 18) return false; break;
-        case '18-25': if (age < 18 || age > 25) return false; break;
-        case '26-35': if (age < 26 || age > 35) return false; break;
-        case '36-45': if (age < 36 || age > 45) return false; break;
-        case '46-60': if (age < 46 || age > 60) return false; break;
-        case '60+': if (age < 60) return false; break;
+      let ageMatches = false;
+      
+      for (const range of filters.ageRange) {
+        switch(range) {
+          case 'below18': if (age < 18) ageMatches = true; break;
+          case '18-25': if (age >= 18 && age <= 25) ageMatches = true; break;
+          case '26-35': if (age >= 26 && age <= 35) ageMatches = true; break;
+          case '36-45': if (age >= 36 && age <= 45) ageMatches = true; break;
+          case '46-60': if (age >= 46 && age <= 60) ageMatches = true; break;
+          case '60+': if (age > 60) ageMatches = true; break;
+        }
+        if (ageMatches) break;
       }
+      
+      if (!ageMatches) return false;
     }
 
     // Product Category
@@ -174,11 +181,11 @@ class StreamingDataLoader {
       if (!match) return false;
     }
 
-    // Date Range
-    if (filters.dateRange) {
+    // Date Range - now supports multiple years
+    if (filters.dateRange && filters.dateRange.length > 0) {
       const itemDate = new Date(row['Date']);
       const year = itemDate.getFullYear().toString();
-      if (year !== filters.dateRange) return false;
+      if (!filters.dateRange.includes(year)) return false;
     }
 
     return true;

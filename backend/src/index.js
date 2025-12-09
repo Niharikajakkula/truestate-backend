@@ -16,7 +16,9 @@ app.use(compression({ level: 6, threshold: 1024 })); // Faster compression
 const allowedOrigins = [
   'https://truestate-backend-five.vercel.app', // Vercel production
   'https://truestate-backend-kwqwh0loc-sri-niharikas-projects.vercel.app', // Vercel preview
-  'http://localhost:5173', // Local dev
+  'http://localhost:3000', // Frontend dev server
+  'http://localhost:3001', // Frontend dev server (alternative port)
+  'http://localhost:5173', // Vite default port
   'http://localhost:5174', // Alternative local port
 ];
 

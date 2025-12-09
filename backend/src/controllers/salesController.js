@@ -11,13 +11,13 @@ class SalesController {
       const filters = {
         customerRegion: req.query.customerRegion ? req.query.customerRegion.split(',').map(s => s.trim()) : undefined,
         gender: req.query.gender ? req.query.gender.split(',').map(s => s.trim()) : undefined,
-        ageRange: req.query.ageRange,
+        ageRange: req.query.ageRange ? req.query.ageRange.split(',').map(s => s.trim()) : undefined,
         productCategory: req.query.productCategory ? req.query.productCategory.split(',').map(s => s.trim()) : undefined,
         tags: req.query.tags ? req.query.tags.split(',').map(s => s.trim()) : undefined,
         paymentMethod: req.query.paymentMethod ? req.query.paymentMethod.split(',').map(s => s.trim()) : undefined,
         orderStatus: req.query.orderStatus ? req.query.orderStatus.split(',').map(s => s.trim()) : undefined,
         storeLocation: req.query.storeLocation ? req.query.storeLocation.split(',').map(s => s.trim()) : undefined,
-        dateRange: req.query.dateRange,
+        dateRange: req.query.dateRange ? req.query.dateRange.split(',').map(s => s.trim()) : undefined,
       };
 
       const search = req.query.search || '';

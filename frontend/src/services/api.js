@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// Use environment variable for API URL, fallback to production URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://truestate-backend-q0a7.onrender.com/api'
+// Use environment variable for API URL, fallback to local development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api'
 
 // Create axios instance with optimizations
 const api = axios.create({
@@ -30,12 +30,14 @@ export const fetchSales = async (params) => {
 
 export const fetchFilterOptions = async () => {
   try {
+    console.log('API_BASE_URL:', API_BASE_URL)
     console.log('Fetching filter options from:', `${API_BASE_URL}/sales/filters`)
     const response = await api.get('/sales/filters')
     console.log('Filter options response:', response.data)
     return response.data
   } catch (error) {
     console.error('Error fetching filter options:', error)
+    console.error('Error details:', error.response?.data || error.message)
     throw error
   }
 }

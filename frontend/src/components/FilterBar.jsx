@@ -6,9 +6,9 @@ function FilterBar({ options, filters, onChange }) {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 })
   const buttonRefs = useRef({})
 
+
+
   const toggleFilter = (filterName) => {
-    console.log('Toggle filter:', filterName, 'Options:', options)
-    
     if (expandedFilter === filterName) {
       setExpandedFilter(null)
     } else {
@@ -71,16 +71,7 @@ function FilterBar({ options, filters, onChange }) {
     onChange({ ...filters, [key]: updated })
   }
 
-  const handleSingleSelect = (key, value) => {
-    // For single-select filters like gender - toggle on/off
-    const current = filters[key] || []
-    const updated = current.includes(value) ? [] : [value]
-    onChange({ ...filters, [key]: updated })
-  }
 
-  const handleRangeChange = (key, value) => {
-    onChange({ ...filters, [key]: value })
-  }
 
   const getActiveFilterCount = () => {
     return Object.values(filters).filter(v => v && (Array.isArray(v) ? v.length > 0 : true)).length
@@ -100,10 +91,12 @@ function FilterBar({ options, filters, onChange }) {
           ? filters.gender[0]
           : `${filters.gender.length} selected`
         : 'Gender',
-      ageRange: filters.ageRange 
-        ? filters.ageRange === 'below18' ? 'Below 18'
-          : filters.ageRange === '60+' ? '60+'
-          : filters.ageRange
+      ageRange: filters.ageRange?.length > 0
+        ? filters.ageRange.length === 1
+          ? filters.ageRange[0] === 'below18' ? 'Below 18'
+            : filters.ageRange[0] === '60+' ? '60+'
+            : filters.ageRange[0]
+          : `${filters.ageRange.length} selected`
         : 'Age Range',
       productCategory: filters.productCategory?.length > 0
         ? filters.productCategory.length === 1
@@ -119,7 +112,11 @@ function FilterBar({ options, filters, onChange }) {
             : filters.paymentMethod[0]
           : `${filters.paymentMethod.length} selected`
         : 'Payment Method',
-      dateRange: filters.dateRange || 'Date Range',
+      dateRange: filters.dateRange?.length > 0
+        ? filters.dateRange.length === 1
+          ? filters.dateRange[0]
+          : `${filters.dateRange.length} selected`
+        : 'Date Range',
       storeLocation: filters.storeLocation?.length > 0
         ? filters.storeLocation.length === 1
           ? filters.storeLocation[0].length > 12
@@ -165,7 +162,7 @@ function FilterBar({ options, filters, onChange }) {
         )}
       </div>
 
-      {/* Gender - Single Select */}
+      {/* Gender - Multi Select */}
       <div className="filter-dropdown">
         <button 
           ref={el => buttonRefs.current['gender'] = el}
@@ -185,10 +182,10 @@ function FilterBar({ options, filters, onChange }) {
               <label key={gender} htmlFor={`gender-${gender}`} className="filter-option">
                 <input
                   id={`gender-${gender}`}
-                  type="radio"
+                  type="checkbox"
                   name="gender"
                   checked={filters.gender?.includes(gender) || false}
-                  onChange={() => handleSingleSelect('gender', gender)}
+                  onChange={() => handleMultiSelect('gender', gender)}
                 />
                 <span>{gender}</span>
               </label>
@@ -197,11 +194,11 @@ function FilterBar({ options, filters, onChange }) {
         )}
       </div>
 
-      {/* Age Range */}
+      {/* Age Range - Multi Select */}
       <div className="filter-dropdown">
         <button 
           ref={el => buttonRefs.current['age'] = el}
-          className={`filter-button ${filters.ageRange ? 'active' : ''}`}
+          className={`filter-button ${filters.ageRange?.length > 0 ? 'active' : ''}`}
           onClick={() => toggleFilter('age')}
           title="Age Range"
         >
@@ -217,10 +214,10 @@ function FilterBar({ options, filters, onChange }) {
               <label key={range} htmlFor={`age-${range}`} className="filter-option">
                 <input
                   id={`age-${range}`}
-                  type="radio"
+                  type="checkbox"
                   name="ageRange"
-                  checked={filters.ageRange === range}
-                  onChange={() => handleRangeChange('ageRange', filters.ageRange === range ? '' : range)}
+                  checked={filters.ageRange?.includes(range) || false}
+                  onChange={() => handleMultiSelect('ageRange', range)}
                 />
                 <span>{range === 'below18' ? 'Below 18' : range === '60+' ? '60+' : range}</span>
               </label>
@@ -293,11 +290,11 @@ function FilterBar({ options, filters, onChange }) {
         )}
       </div>
 
-      {/* Date Range */}
+      {/* Date Range - Multi Select */}
       <div className="filter-dropdown">
         <button 
           ref={el => buttonRefs.current['date'] = el}
-          className={`filter-button ${filters.dateRange ? 'active' : ''}`}
+          className={`filter-button ${filters.dateRange?.length > 0 ? 'active' : ''}`}
           onClick={() => toggleFilter('date')}
           title="Date Range"
         >
@@ -313,10 +310,10 @@ function FilterBar({ options, filters, onChange }) {
               <label key={year} htmlFor={`date-${year}`} className="filter-option">
                 <input
                   id={`date-${year}`}
-                  type="radio"
+                  type="checkbox"
                   name="dateRange"
-                  checked={filters.dateRange === year}
-                  onChange={() => handleRangeChange('dateRange', filters.dateRange === year ? '' : year)}
+                  checked={filters.dateRange?.includes(year) || false}
+                  onChange={() => handleMultiSelect('dateRange', year)}
                 />
                 <span>{year}</span>
               </label>
