@@ -1,6 +1,6 @@
 # Retail Sales Management System
 
-A full-stack retail sales management application with advanced search, filtering, sorting, and pagination capabilities built for handling large-scale sales data efficiently.
+A full-stack retail sales management application with advanced search, filtering, sorting, and pagination capabilities. Built for handling large-scale sales data efficiently with real-time streaming and memory optimization. Features multiselect filters, debounced search, and responsive design for optimal user experience.
 
 ## Tech Stack
 
@@ -14,45 +14,15 @@ Implements case-insensitive full-text search across Customer Name and Phone Numb
 
 ## Filter Implementation Summary
 
-Multi-select filtering for Customer Region, Gender, Age Range, Product Category, Tags, Payment Method, Order Status, Store Location, and Date Range. Filters use Set-based lookups for O(1) performance, support case-insensitive matching, and work in combination. Gender filter uses radio buttons for single selection. All filters maintain state across pagination and sorting operations.
+Multi-select filtering for Customer Region, Gender, Age Range, Product Category, Payment Method, Order Status, Store Location, and Date Range. Filters use checkbox-based multiselect interface, support case-insensitive matching, and work in combination. All filters maintain state across pagination and sorting operations.
 
 ## Sorting Implementation Summary
 
-Supports sorting by Date (Newest/Oldest First), Quantity (High/Low), and Customer Name (A-Z/Z-A). Sorting preserves active search and filter states. For large datasets (>1000 records), implements partial sorting using quickselect algorithm for O(n) average performance. Results are cached to optimize repeated queries.
+Supports sorting by Date (Newest/Oldest First), Quantity (High/Low), and Customer Name (A-Z/Z-A). Sorting preserves active search and filter states. Backend implements in-memory sorting with efficient comparison algorithms for optimal performance.
 
 ## Pagination Implementation Summary
 
 Fixed page size of 10 items per page with Previous/Next navigation and direct page number selection. Pagination maintains all active search, filter, and sort states. Displays current page, total pages, and total item count. Backend implements efficient slice-based pagination with metadata response.
-
-## Project Structure
-
-```
-root/
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── services/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── utils/
-│   │   └── index.js
-│   ├── data/
-│   │   └── sales_data.csv
-│   ├── package.json
-│   └── README.md
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── services/
-│   │   ├── styles/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── package.json
-│   └── README.md
-├── docs/
-│   └── architecture.md
-└── README.md
-```
 
 ## Setup Instructions
 
@@ -71,11 +41,9 @@ root/
    npm install
    ```
 
-3. Ensure `sales_data.csv` is in `backend/data/` directory
-
-4. Start the server:
+3. Start the server:
    ```bash
-   npm run dev
+   npm start
    ```
    Backend runs on `http://localhost:5002`
 
@@ -98,3 +66,6 @@ root/
 
 ### Access Application
 Open `http://localhost:3000` in your browser after starting both servers.
+
+## Architecture Document
+Located at: `/docs/architecture.md`
