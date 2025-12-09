@@ -1,41 +1,8 @@
-# Dependencies
+# Node / build
 node_modules/
-*/node_modules/
-
-# Build outputs
+.env
 dist/
 build/
-*/dist/
-*/build/
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Editor directories
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS files
-.DS_Store
-Thumbs.db
 
 # Data files
-# NOTE: sales_data.csv is REQUIRED for deployment - do NOT ignore it!
-# backend/data/*.csv (commented out to include sales_data.csv)
-!backend/data/sales_data.csv
-
-# Temporary files
-*.tmp
-.cache/
+backend/data/*.csv
