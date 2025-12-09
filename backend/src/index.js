@@ -9,37 +9,19 @@ const PORT = process.env.PORT || 5002;
 
 console.log('🚀 Starting TruEstate Sales API Server...');
 
-// ✅ List all allowed origins - EXACT matches only
-const allowedOrigins = [
-  'https://truestate-backend-five.vercel.app',  // Production frontend
-  'http://localhost:3000',                      // Local dev
-  'http://localhost:3001',                      // Local dev (alt port)
-  'http://localhost:5173',                      // Vite default
-  'http://localhost:5174'                       // Vite alt port
-];
+// 🌐 OPEN CORS - Allow access from ANY origin (less secure but more accessible)
+console.log('⚠️  WARNING: CORS is set to allow ALL origins - less secure for production');
 
-// ✅ CORS middleware - MUST be applied BEFORE routes
+// ✅ CORS middleware - OPEN ACCESS for everyone
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like curl, Postman, mobile apps)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-      console.error('❌ CORS blocked:', origin);
-      return callback(new Error(msg), false);
-    }
-    
-    console.log('✅ CORS allowed:', origin);
-    return callback(null, true);
-  },
+  origin: true,  // Allow all origins
   credentials: true,  // Enable if using cookies/auth
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 }));
 
-// ✅ Preflight support - use cors() middleware, NOT app.options('*', ...)
-app.options('*', cors());
+// ✅ Preflight OPTIONS requests are automatically handled by the cors() middleware above
+// No need for explicit app.options() - it causes PathError with '*' wildcard
 
 // Basic middleware
 app.use(compression());
@@ -52,7 +34,7 @@ app.get('/', (req, res) => {
     status: 'OK',
     message: 'TruEstate Retail Sales Management API',
     timestamp: new Date().toISOString(),
-    allowedOrigins: allowedOrigins
+    corsPolicy: 'Open - All origins allowed'
   });
 });
 
@@ -63,13 +45,12 @@ app.use('/api/sales', salesRoutes);
 app.use((err, req, res, next) => {
   console.error('🚨 Global error handler:', err.message);
   
-  // Handle CORS errors specifically
+  // Handle CORS errors specifically (should not occur with open CORS)
   if (err.message && err.message.includes('CORS policy')) {
     return res.status(403).json({
       error: 'CORS Error',
-      message: 'Origin not allowed by CORS policy',
-      origin: req.headers.origin,
-      allowedOrigins: allowedOrigins
+      message: 'Unexpected CORS error',
+      origin: req.headers.origin
     });
   }
   
@@ -108,8 +89,8 @@ async function startServer() {
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`🌐 Health check: http://localhost:${PORT}/`);
       console.log(`🔗 API endpoint: http://localhost:${PORT}/api/sales`);
-      console.log('✅ Allowed origins:');
-      allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
+      console.log('🌐 CORS Policy: OPEN - All origins allowed');
+      console.log('⚠️  Security Note: API is accessible from any website');
       console.log('🚀 Ready for production deployment\n');
     });
     
