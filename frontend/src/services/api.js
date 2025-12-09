@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// Use environment variable for API URL, fallback to local development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api'
+// Use environment variable for API URL, fallback to production
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://truestate-backend-q0a7.onrender.com/api'
 
 // Create axios instance with optimizations
 const api = axios.create({
@@ -12,20 +12,28 @@ const api = axios.create({
 
 // Sales APIs
 export const fetchSales = async (params) => {
-  const queryParams = new URLSearchParams()
-  
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      if (Array.isArray(value) && value.length > 0) {
-        queryParams.append(key, value.join(','))
-      } else if (!Array.isArray(value)) {
-        queryParams.append(key, value)
+  try {
+    const queryParams = new URLSearchParams()
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        if (Array.isArray(value) && value.length > 0) {
+          queryParams.append(key, value.join(','))
+        } else if (!Array.isArray(value)) {
+          queryParams.append(key, value)
+        }
       }
-    }
-  })
+    })
 
-  const response = await api.get(`/sales?${queryParams}`)
-  return response.data
+    console.log('Fetching sales from:', `${API_BASE_URL}/sales?${queryParams}`)
+    const response = await api.get(`/sales?${queryParams}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching sales:', error)
+    console.error('API URL:', API_BASE_URL)
+    console.error('Error details:', error.response?.data || error.message)
+    throw error
+  }
 }
 
 export const fetchFilterOptions = async () => {
