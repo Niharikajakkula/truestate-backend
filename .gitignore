@@ -13,3 +13,7 @@ frontend/.env.local
 
 # Data files
 backend/data/*.csv
+data/sales_data.csv
+
+# Keep split CSV files (smaller)
+!data/sales_data_part*.csv
