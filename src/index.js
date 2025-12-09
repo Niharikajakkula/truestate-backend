@@ -9,16 +9,24 @@ const PORT = process.env.PORT || 5002;
 
 console.log('🚀 Starting TruEstate Sales API Server...');
 
-// 🌐 CORS Configuration for Railway Deployment
-console.log('🚀 CORS configured for Railway deployment - allowing all origins');
+// 🌐 CORS Configuration for Production Deployment
+console.log('🚀 CORS configured for production deployment');
 
-// ✅ CORS middleware - Allow all origins for Railway deployment
+// ✅ CORS middleware - Allow specific origins for production
 app.use(cors({
-  origin: '*',  // Allow all origins for Railway deployment
-  credentials: false,  // Disable credentials for wildcard origin
+  origin: [
+    'https://classy-daffodil-de44f4.netlify.app',  // Your Netlify frontend
+    'http://localhost:3000',                       // Local development
+    'http://localhost:3001',                       // Local development (alt)
+    'http://localhost:5173'                        // Vite development
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 }));
+
+// Handle preflight OPTIONS requests
+app.options('*', cors());
 
 // ✅ Preflight OPTIONS requests are automatically handled by the cors() middleware above
 // No need for explicit app.options() - it causes PathError with '*' wildcard
@@ -34,7 +42,13 @@ app.get('/', (req, res) => {
     status: 'OK',
     message: 'TruEstate Retail Sales Management API',
     timestamp: new Date().toISOString(),
-    corsPolicy: 'Open - All origins allowed'
+    corsPolicy: 'Specific origins allowed',
+    allowedOrigins: [
+      'https://classy-daffodil-de44f4.netlify.app',
+      'http://localhost:3000',
+      'http://localhost:3001', 
+      'http://localhost:5173'
+    ]
   });
 });
 
@@ -89,8 +103,8 @@ async function startServer() {
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`🌐 Health check: http://localhost:${PORT}/`);
       console.log(`🔗 API endpoint: http://localhost:${PORT}/api/sales`);
-      console.log('🌐 CORS Policy: OPEN - All origins allowed');
-      console.log('⚠️  Security Note: API is accessible from any website');
+      console.log('🌐 CORS Policy: Specific origins allowed');
+      console.log('✅ Allowed origins: Netlify + localhost development');
       console.log('🚀 Ready for production deployment\n');
     });
     

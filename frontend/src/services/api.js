@@ -1,13 +1,13 @@
 import axios from 'axios'
 
-// Use environment variable for API URL, fallback to local development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api'
+// Use environment variable for API URL, fallback to Render backend
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://truestate-backend-q0a7.onrender.com/api'
 
 // Create axios instance with optimizations
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000, // Increased timeout for cold starts
-  withCredentials: false // Disabled for wildcard CORS compatibility
+  withCredentials: true // Enable credentials for specific CORS origins
 })
 
 // Sales APIs
