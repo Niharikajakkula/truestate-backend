@@ -1,13 +1,13 @@
 import axios from 'axios'
 
-// Use environment variable for API URL, fallback to Railway deployment
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://YOUR_RAILWAY_BACKEND_URL/api'
+// Use environment variable for API URL, fallback to local development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api'
 
 // Create axios instance with optimizations
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // Increased timeout for Render cold starts
-  withCredentials: true // Enable credentials for CORS
+  timeout: 30000, // Increased timeout for cold starts
+  withCredentials: false // Disabled for wildcard CORS compatibility
 })
 
 // Sales APIs
