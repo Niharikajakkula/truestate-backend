@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node --max-old-space-size=4096 src/index.js",
-    "dev": "nodemon --max-old-space-size=4096 src/index.js",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "start:memory": "node --max-old-space-size=4096 src/index.js",
+    "dev:memory": "nodemon --max-old-space-size=4096 src/index.js",
     "verify": "node verify-csv.js",
     "split-csv": "node split-csv.js",
     "test": "echo \"Error: no test specified\" && exit 1"
