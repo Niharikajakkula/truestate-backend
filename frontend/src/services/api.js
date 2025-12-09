@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// Use environment variable for API URL, fallback to production
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://truestate-backend-q0a7.onrender.com/api'
+// Use environment variable for API URL, fallback to Railway deployment
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://YOUR_RAILWAY_BACKEND_URL/api'
 
 // Create axios instance with optimizations
 const api = axios.create({

@@ -9,13 +9,13 @@ const PORT = process.env.PORT || 5002;
 
 console.log('🚀 Starting TruEstate Sales API Server...');
 
-// 🌐 OPEN CORS - Allow access from ANY origin (less secure but more accessible)
-console.log('⚠️  WARNING: CORS is set to allow ALL origins - less secure for production');
+// 🌐 CORS Configuration for Railway Deployment
+console.log('🚀 CORS configured for Railway deployment - allowing all origins');
 
-// ✅ CORS middleware - OPEN ACCESS for everyone
+// ✅ CORS middleware - Allow all origins for Railway deployment
 app.use(cors({
-  origin: true,  // Allow all origins
-  credentials: true,  // Enable if using cookies/auth
+  origin: '*',  // Allow all origins for Railway deployment
+  credentials: false,  // Disable credentials for wildcard origin
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 }));
