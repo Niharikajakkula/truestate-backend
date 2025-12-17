@@ -43,21 +43,19 @@ class StreamingDataLoader {
   }
 
   /**
-   * Stream through CSV files and collect matching records
+   * Stream through CSV files and collect matching records (MEMORY SAFE)
    */
   async queryData(filters = {}, search = '', sortBy = 'date', sortOrder = 'desc', page = 1, pageSize = 10) {
     const results = [];
-    let totalScanned = 0;
+    const maxResults = pageSize * 10; // ✅ LIMIT: Only keep 100 results max in memory
 
     // Stream through each CSV file
     for (const csvFile of this.csvFiles) {
-      const fileResults = await this.streamFile(csvFile, filters, search);
+      const fileResults = await this.streamFile(csvFile, filters, search, maxResults - results.length);
       results.push(...fileResults);
-      totalScanned += fileResults.length;
 
-      // Early exit if we have enough results for pagination
-      // (We need more than requested to handle sorting)
-      if (results.length > pageSize * page * 2) {
+      // ✅ MEMORY PROTECTION: Stop if we have enough results
+      if (results.length >= maxResults) {
         break;
       }
     }
@@ -75,7 +73,7 @@ class StreamingDataLoader {
       pagination: {
         currentPage: page,
         pageSize: pageSize,
-        totalItems: results.length,
+        totalItems: results.length, // ✅ Show actual found items (not total in DB)
         totalPages: Math.ceil(results.length / pageSize),
         hasNext: endIndex < results.length,
         hasPrev: page > 1,
@@ -84,22 +82,30 @@ class StreamingDataLoader {
   }
 
   /**
-   * Stream a single CSV file and filter on-the-fly
+   * Stream a single CSV file and filter on-the-fly (MEMORY SAFE)
    */
-  streamFile(filePath, filters, search) {
+  streamFile(filePath, filters, search, maxResults = 100) {
     return new Promise((resolve, reject) => {
       const results = [];
       
-      fs.createReadStream(filePath)
+      const stream = fs.createReadStream(filePath)
         .pipe(csv())
         .on('data', (row) => {
           // Apply filters
           if (this.matchesFilters(row, filters, search)) {
             results.push(row);
+            
+            // ✅ MEMORY PROTECTION: Stop reading if we have enough results
+            if (results.length >= maxResults) {
+              stream.destroy(); // Stop reading the file
+            }
           }
         })
         .on('end', () => {
           resolve(results);
+        })
+        .on('close', () => {
+          resolve(results); // Handle early termination
         })
         .on('error', (error) => {
           reject(error);
