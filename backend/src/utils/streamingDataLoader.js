@@ -227,10 +227,24 @@ class StreamingDataLoader {
   }
 
   /**
-   * Get filter options (cached)
+   * Get filter options (cached) - MEMORY SAFE FOR RENDER
    */
   async getFilterOptions() {
     if (this.filterOptionsCache) {
+      return this.filterOptionsCache;
+    }
+
+    // ✅ RENDER FIX: Skip cache building in production to prevent OOM
+    if (process.env.NODE_ENV === 'production') {
+      console.log('⚠️ Production mode: Using static filter options (no cache building)');
+      this.filterOptionsCache = {
+        customerRegions: ['North', 'South', 'East', 'West', 'Central'],
+        genders: ['Male', 'Female', 'Other'],
+        productCategories: ['Electronics', 'Clothing', 'Home', 'Sports', 'Books'],
+        tags: ['Premium', 'Sale', 'New', 'Popular'],
+        paymentMethods: ['Credit Card', 'Debit Card', 'Cash', 'PayPal'],
+        storeLocations: ['Store A', 'Store B', 'Store C', 'Online'],
+      };
       return this.filterOptionsCache;
     }
 
@@ -245,11 +259,19 @@ class StreamingDataLoader {
 
     // Stream through first file only for filter options (faster)
     const firstFile = this.csvFiles[0];
+    let rowCount = 0;
+    const MAX_ROWS = 1000; // ✅ LIMIT: Only read first 1000 rows for filters
     
     await new Promise((resolve, reject) => {
-      fs.createReadStream(firstFile)
+      const stream = fs.createReadStream(firstFile)
         .pipe(csv())
         .on('data', (row) => {
+          rowCount++;
+          if (rowCount > MAX_ROWS) {
+            stream.destroy(); // Stop reading after 1000 rows
+            return;
+          }
+          
           if (row['Customer Region']) regions.add(row['Customer Region'].trim());
           if (row['Gender']) genders.add(row['Gender'].trim());
           if (row['Product Category']) categories.add(row['Product Category'].trim());
@@ -258,6 +280,7 @@ class StreamingDataLoader {
           if (row['Store Location']) locations.add(row['Store Location'].trim());
         })
         .on('end', resolve)
+        .on('close', resolve) // Handle early termination
         .on('error', reject);
     });
 
@@ -270,7 +293,7 @@ class StreamingDataLoader {
       storeLocations: Array.from(locations).sort(),
     };
 
-    console.log('✓ Filter options cached');
+    console.log(`✓ Filter options cached from ${rowCount} rows`);
     return this.filterOptionsCache;
   }
 }
