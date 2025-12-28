@@ -2,6 +2,11 @@
 
 A full-stack retail sales management application with advanced search, filtering, sorting, and pagination capabilities. Built for handling large-scale sales data efficiently with real-time streaming and memory optimization. Features multiselect filters, debounced search, and responsive design for optimal user experience.
 
+## 🚀 Live Demo
+
+**Frontend:** [https://classy-daffodil-de44f4.netlify.app](https://classy-daffodil-de44f4.netlify.app)  
+**Backend API:** [https://truestate-backend-q0a7.onrender.com](https://truestate-backend-q0a7.onrender.com)
+
 ## Tech Stack
 
 **Backend:** Node.js, Express.js, CSV Parser  
