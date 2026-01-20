@@ -38,6 +38,10 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", uptime: process.uptime() });
+});
+
 // ✅ API routes - CORS is already applied globally above
 app.use('/api/sales', salesRoutes);
 

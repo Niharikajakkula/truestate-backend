@@ -2,7 +2,13 @@ import '../styles/SalesTable.css'
 
 function SalesTable({ data }) {
   if (!data || data.length === 0) {
-    return <div className="no-data">No sales data found</div>
+    return (
+      <div className="no-data">
+        <div className="no-data-icon">📊</div>
+        <h3>No sales data found</h3>
+        <p>Try adjusting your search or filter criteria to see results.</p>
+      </div>
+    )
   }
 
   return (
